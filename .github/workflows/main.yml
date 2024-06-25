@@ -1,0 +1,29 @@
+name: Ant CI
+on:
+  push:
+    branches:
+      - master  # Adjust branch name if necessary
+  pull_request:
+    branches:
+      - master  # Adjust branch name if necessary
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Set up JDK 21
+      uses: actions/setup-java@v2
+      with:
+        java-version: '21'
+        distribution: 'adopt'
+    - name: Install Apache Ant
+      run: choco install ant -y
+    - name: Set up NetBeans
+      run: choco install netbeans -y
+    - name: Run Ant build
+      run: ant -f build.xml  # Adjust the build file name if necessary
+    - name: Run tests with JUnit
+      run: |
+        java -cp lib/junit-4.x.jar;build/classes org.junit.runner.JUnitCore user_login.LoginTest user_login.Main_PageTest user_login.MenuTest user_login.RegisterTest user_login.ReportTest user_login.Task_ManagerTest user_login.UserDataTest
